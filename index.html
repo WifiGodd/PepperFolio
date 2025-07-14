@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Pepper - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: float linear infinite;
+            box-shadow: 0 0 6px #00ff88;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(200px);
+                opacity: 0;
+            }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 18px 50px;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(.77,0,.18,1);
+            box-shadow: 0 2px 24px 0 rgba(0,255,136,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+        }
+
+        nav ul li {
+            cursor: pointer;
+            padding: 8px 18px;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+
+        nav ul li .nav-underline {
+            position: absolute;
+            left: 50%;
+            bottom: 6px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff88, #88ff00);
+            border-radius: 2px;
+            transition: width 0.35s cubic-bezier(.77,0,.18,1), left 0.35s cubic-bezier(.77,0,.18,1);
+            transform: translateX(-50%);
+        }
+
+        nav ul li:hover .nav-underline,
+        nav ul li.active .nav-underline {
+            width: 80%;
+            left: 10%;
+        }
+
+        nav ul li:active {
+            color: #00ff88;
+        }
+
+        /* Hamburger menu styles */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            position: relative;
+            margin-left: 10px;
+        }
+        .menu-toggle .bar {
+            height: 4px;
+            width: 100%;
+            background: #00ff88;
+            border-radius: 2px;
+            margin: 4px 0;
+            transition: all 0.4s cubic-bezier(.77,0,.18,1);
+            display: block;
+        }
+        .menu-toggle.active .bar1 {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .menu-toggle.active .bar2 {
+            opacity: 0;
+        }
+        .menu-toggle.active .bar3 {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: fixed;
+            top: 0;
+            right: -100vw;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(12px);
+            padding: 120px 0 0 0;
+            z-index: 1050;
+            align-items: center;
+            justify-content: flex-start;
+            transition: right 0.5s cubic-bezier(.77,0,.18,1);
+            pointer-events: none;
+        }
+        .mobile-menu.active {
+            right: 0;
+            pointer-events: auto;
+        }
+        .mobile-menu .mobile-link {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.4s cubic-bezier(.77,0,.18,1), transform 0.4s cubic-bezier(.77,0,.18,1);
+        }
+        .mobile-menu.active .mobile-link {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .mobile-menu .mobile-link:active {
+            color: #00ff88;
+        }
+
+        /* Animate mobile links in sequence */
+        .mobile-menu.active .mobile-link:nth-child(1) { transition-delay: 0.08s; }
+        .mobile-menu.active .mobile-link:nth-child(2) { transition-delay: 0.16s; }
+        .mobile-menu.active .mobile-link:nth-child(3) { transition-delay: 0.24s; }
+        .mobile-menu.active .mobile-link:nth-child(4) { transition-delay: 0.32s; }
+
+        @media (max-width: 900px) {
+            nav ul {
+                display: none;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+        }
+        @media (min-width: 901px) {
+            .mobile-menu {
+                display: none !important;
+            }
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 100px 50px 50px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .homepage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #88ff00, #00ff88);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+            margin-bottom: 50px;
+            text-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 100px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: 2px solid #00ff88;
+            background: transparent;
+            color: #00ff88;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .projects-preview {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .projects-preview.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .project-card h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .project-card p {
+            color: #cccccc;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: #00ff88;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideInFromLeft 1s ease-out;
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .placeholder-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #cccccc;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .portfolio-section {
+            margin-bottom: 80px;
+        }
+
+        .portfolio-section h3 {
+            font-size: 2rem;
+            color: #00ff88;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #00ff88;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .page {
+                padding: 100px 20px 50px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #88ff00);
+            z-index: 10000;
+            transition: width 0.3s ease;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            animation: floatAround 20s linear infinite;
+        }
+
+        @keyframes floatAround {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(300px) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-container"></div>
+    <div class="floating-elements"></div>
+    <div class="loading-bar"></div>
+
+    <nav>
+        <span class="nav-brand">Green Pepper | Yes I'm a Green Pepper</span>
+        <ul id="desktop-menu">
+            <li data-page="home" class="active">
+                Home
+                <span class="nav-underline"></span>
+            </li>
+            <li data-page="about">
+                About
+                <span class="nav-underline"></span>
+            </li>
+            <li data-page="services">
+                Services
+                <span class="nav-underline"></span>
+            </li>
+            <li data-page="portfolio">
+                Portfolio
+                <span class="nav-underline"></span>
+            </li>
+        </ul>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" type="button">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-link" data-page="home">Home</div>
+            <div class="mobile-link" data-page="about">About</div>
+            <div class="mobile-link" data-page="services">Services</div>
+            <div class="mobile-link" data-page="portfolio">Portfolio</div>
+        </div>
+    </nav>
+
+    <div id="home" class="page active">
+        <div class="homepage">
+            <h1 class="logo">Green Pepper</h1>
+            <div class="buttons">
+                <a href="#" class="btn" onclick="openDiscord()">Discord</a>
+                <a href="#" class="btn" onclick="showPage('portfolio')">EXPLORE MY WORK</a>
+            </div>
+            <div class="projects-preview" id="projects-preview">
+                <h2 style="color: #00ff88; text-align: center; margin-bottom: 30px;">Featured Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Project+1" alt="Project 1">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Project+2" alt="Project 2">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Project+3" alt="Project 3">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="page">
+        <div class="content-section">
+            <h2 class="section-title">About Me</h2>
+            <div class="placeholder-text">
+                <p>Hi, i am Green Pepper a cool developer ig but yeah cool cool cool cool</p>
+                <br>
+                <p>Well i love uh nothing nobody</p>
+                <br>
+                <p>i am from egypt btw</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="services" class="page">
+        <div class="content-section">
+            <h2 class="section-title">Services</h2>
+            <div class="placeholder-text">
+                <p>My services are the following:</p>
+                <br>
+                <p><strong>Roblox Scripting:</strong>I am a 2 months experience scripter, but i see myself can do impressive stuff.</p>
+                <br>
+                <p><strong>Building And 3D Modeling And Animating:</strong>still cant do none of those but i am constantly learning how to</p>
+                <br>
+                <p><strong>Web Dev:</strong>yes pooki i have 3 years experience in that that should be easy</p>
+                <br>
+                <p><strong>UI Design:</strong>kinda can do it but kinda bad started doing it from 3 months</p>
+                <br>
+                <p><strong>2D Graphics and 3D Graphics:</strong>Yes from cool 9 months that should be easy to make but i will fill it on the portfolio so soon</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="portfolio" class="page">
+        <div class="content-section">
+            <h2 class="section-title">Portfolio</h2>
+            
+            <div class="portfolio-section">
+                <h3>Scripter</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+1" alt="Script 1">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+2" alt="Script 2">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+3" alt="Script 3">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+4" alt="Script 4">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+5" alt="Script 5">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+6" alt="Script 6">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+7" alt="Script 7">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+8" alt="Script 8">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+9" alt="Script 9">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Script+10" alt="Script 10">
+                        <h3>Coming Soon</h3>
+                        <p>Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3>Builder</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+1" alt="Build 1">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+2" alt="Build 2">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+3" alt="Build 3">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+4" alt="Build 4">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+5" alt="Build 5">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+6" alt="Build 6">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+7" alt="Build 7">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+8" alt="Build 8">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+9" alt="Build 9">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=Build+10" alt="Build 10">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3>3D Modeler</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+1" alt="3D Model 1">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+2" alt="3D Model 2">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+3" alt="3D Model 3">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+4" alt="3D Model 4">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+5" alt="3D Model 5">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+6" alt="3D Model 6">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+7" alt="3D Model 7">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+8" alt="3D Model 8">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+9" alt="3D Model 9">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3D+10" alt="3D Model 10">
+                        <h3>Soon</h3>
+                        <p> Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3>UI Design</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+1" alt="UI Design 1">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+2" alt="UI Design 2">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+3" alt="UI Design 3">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+4" alt="UI Design 4">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+5" alt="UI Design 5">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+6" alt="UI Design 6">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+7" alt="UI Design 7">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+8" alt="UI Design 8">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+9" alt="UI Design 9">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=UI+10" alt="UI Design 10">
+                        <h3>Soon</h3>
+                        <p>EVERYTHING IS FUCKING SOON NOTHING NOW SINCE YES WHEN I MAKE THE STUFF I WILL PUT OF COURSE</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3>2D Graphics</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+1" alt="2D Graphics 1">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+2" alt="2D Graphics 2">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+3" alt="2D Graphics 3">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+4" alt="2D Graphics 4">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+5" alt="2D Graphics 5">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+6" alt="2D Graphics 6">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+7" alt="2D Graphics 7">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+8" alt="2D Graphics 8">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+9" alt="2D Graphics 9">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=2D+10" alt="2D Graphics 10">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3>3D Graphics</h3>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+1" alt="3D Graphics 1">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+2" alt="3D Graphics 2">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+3" alt="3D Graphics 3">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+4" alt="3D Graphics 4">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+5" alt="3D Graphics 5">
+                        <h3>Soon</h3>
+                        <p>Soon yes</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+6" alt="3D Graphics 6">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+7" alt="3D Graphics 7">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+8" alt="3D Graphics 8">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+9" alt="3D Graphics 9">
+                        <h3>Soon</h3>
+                        <p>Soon</p>
+                    </div>
+                    <div class="project-card">
+                        <img src="https://via.placeholder.com/300x200/1a1a1a/00ff88?text=3DG+10" alt="3D Graphics 10">
+                        <h3>Soon</h3>
+                        <p>YES EVERYTHING IS SOON SINCE YES NO CONTENT TO PUT</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function createFloatingElements() {
+            const container = document.querySelector('.floating-elements');
+            for (let i = 0; i < 10; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                element.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(element);
+            }
+        }
+
+        function showPage(pageId) {
+            const loadingBar = document.querySelector('.loading-bar');
+            loadingBar.style.width = '0%';
+            
+            setTimeout(() => {
+                loadingBar.style.width = '100%';
+            }, 50);
+
+            setTimeout(() => {
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+                
+                setTimeout(() => {
+                    loadingBar.style.width = '0%';
+                }, 300);
+            }, 300);
+        }
+
+        function openDiscord() {
+            window.open('https://discord.gg/YOUR_DISCORD_ID', '_blank');
+        }
+
+        function handleScroll() {
+            const nav = document.querySelector('nav');
+            const projectsPreview = document.getElementById('projects-preview');
+            const scrollY = window.scrollY;
+
+            if (scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+
+            if (scrollY > 200) {
+                projectsPreview.classList.add('visible');
+            }
+        }
+
+        function animateProjectCards() {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            });
+        }
+
+        function initializeAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.project-card, .section-title, .placeholder-text').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            createFloatingElements();
+            initializeAnimations();
+            
+            window.addEventListener('scroll', handleScroll);
+            
+            setInterval(createParticles, 10000);
+            setInterval(createFloatingElements, 15000);
+            
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('div');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(0, 255, 136, 0.6)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = (e.clientX - e.target.offsetLeft) + 'px';
+                    ripple.style.top = (e.clientY - e.target.offsetTop) + 'px';
+                    ripple.style.width = ripple.style.height = '20px';
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            .project-card {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            
+            .project-card.animate {
+                animation: fadeInUp 0.6s ease-out forwards;
+            }
+            
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .logo:hover {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.8));
+            }
+            
+            .btn:active {
+                transform: translateY(-3px) scale(0.95);
+            }
+            
+            .project-card:hover img {
+                transform: scale(1.1);
+                transition: transform 0.3s ease;
+            }
+            
+            .project-card img {
+                transition: transform 0.3s ease;
+            }
+            
+            @media (max-width: 768px) {
+                .logo {
+                    font-size: 2.5rem;
+                }
+                
+                .buttons {
+                    gap: 20px;
+                }
+                
+                .btn {
+                    padding: 12px 24px;
+                    font-size: 0.9rem;
+                }
+                
+                .projects-grid {
+                    gap: 20px;
+                }
+                
+                .project-card {
+                    padding: 15px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Navbar and hamburger menu logic
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const desktopLinks = document.querySelectorAll('#desktop-menu li');
+
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            this.setAttribute('aria-expanded', this.classList.contains('active'));
+            // Animate links in
+            if (mobileMenu.classList.contains('active')) {
+                mobileLinks.forEach((link, i) => {
+                    setTimeout(() => {
+                        link.classList.add('show');
+                    }, i * 80);
+                });
+            } else {
+                mobileLinks.forEach(link => link.classList.remove('show'));
+            }
+        });
+
+        // Animate mobile menu links on click
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Animate out
+                mobileLinks.forEach((l, i) => {
+                    setTimeout(() => {
+                        l.style.opacity = '0';
+                        l.style.transform = 'translateY(30px)';
+                    }, i * 60);
+                });
+                setTimeout(() => {
+                    mobileMenu.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    // Reset styles
+                    mobileLinks.forEach(l => {
+                        l.style.opacity = '';
+                        l.style.transform = '';
+                    });
+                }, 320);
+                showPage(this.getAttribute('data-page'));
+                setActiveNav(this.getAttribute('data-page'));
+            });
+        });
+
+        // Animate desktop nav links on click
+        desktopLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                showPage(this.getAttribute('data-page'));
+                setActiveNav(this.getAttribute('data-page'));
+                // Animate underline
+                desktopLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function setActiveNav(pageId) {
+            desktopLinks.forEach(l => {
+                if (l.getAttribute('data-page') === pageId) {
+                    l.classList.add('active');
+                } else {
+                    l.classList.remove('active');
+                }
+            });
+        }
+
+        // Remove old nav/mobile menu logic if present
+        // ...existing code...
+        // Remove: function toggleMobileMenu() {...}
+        // Remove: nav ul li onclick, mobile-menu div onclick
+
+        // ...existing code...
+    </script>
+</body>
+</html>
